@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "allowUnreachableCode": false,
+        "module": "CommonJS",
+        "outDir": "./dist",
+        "esModuleInterop": true,
+        "allowUnusedLabels": false,
+        "alwaysStrict": true,
+        "strictNullChecks": true,
+        "exactOptionalPropertyTypes": true,
+        "noImplicitAny": true,
+        "noImplicitThis": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false,
+        "inlineSourceMap": true,
+    }
+}
