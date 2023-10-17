@@ -13,5 +13,7 @@
         "noUnusedLocals": true,
         "noUnusedParameters": false,
         "inlineSourceMap": true,
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     }
 }
