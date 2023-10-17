@@ -11,8 +11,11 @@ export class ConfigureRoutes {
             for (const file of files) {
                 if (!['common.routes.config.js', 'configureRoutes.js'].includes(file)) {
                     const routeModule = await import('./' + file)
-                    const routeInstance: any = container.resolve(routeModule.default)
-                    routeInstance.attachRoutes()
+                    container.resolve(routeModule.default)
+
+                    // After resolving the instance, it will be created by the DI container.
+                    // while creation it will automatically attach the routes to the express application.
+                    // No need to attach routes explicitly after instance resolution.  
                 }
             }
         })

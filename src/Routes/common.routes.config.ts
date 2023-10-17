@@ -1,4 +1,7 @@
 import express from 'express'
+import * as debug  from 'debug'
+
+const debugLog: debug.IDebugger = debug.debug('common.routes.config')
 
 export abstract class CommonRoutesConfig {
     name: string
@@ -18,6 +21,7 @@ export abstract class CommonRoutesConfig {
     attachRoutes(): express.Application {
         const routes = this.defineRoutes()
         this.app.use(this.name, routes)
+        debugLog(`Routes configured for ${this.name}`)
         return this.app
     }
 

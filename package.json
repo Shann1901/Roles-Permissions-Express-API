@@ -4,7 +4,8 @@
   "description": "Template for creating REST APIs using express",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "tsc && node ./dist/index.js"
+    "start": "tsc && node ./dist/index.js",
+    "debug": "SET DEBUG=* && npm run start"
   },
   "author": "Shantanu Nigam",
   "license": "ISC",
