@@ -14,7 +14,8 @@ const router = express.Router()
     )
 @injectable()
 @singleton()
-export class UserRoutes extends CommonRoutesConfig {
+export default class UserRoutes extends CommonRoutesConfig {
+    static routeClassType: UserRoutes
     constructor(@inject('parentPath') name: string, @inject('expressApp') app: express.Application) {
         super(name, app)
     }
@@ -31,5 +32,3 @@ export class UserRoutes extends CommonRoutesConfig {
         return router
     }
 }
-
-
