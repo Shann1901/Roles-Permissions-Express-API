@@ -5,6 +5,9 @@ import { ConfigureRoutes } from './routes/configureRoutes'
 import * as winston from 'winston'
 import * as expressWinston from 'express-winston'
 import express, { Request, Response } from 'express'
+import dotenv from "dotenv"
+
+dotenv.config()
 
 const loggerOptions: expressWinston.LoggerOptions = {
     transports: [new winston.transports.Console],
