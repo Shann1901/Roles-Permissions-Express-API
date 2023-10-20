@@ -1,7 +1,7 @@
 // The Reflect polyfill import should only be added once, and before DI is used:
 import "reflect-metadata"
 import { container } from 'tsyringe'
-import { ConfigureRoutes } from './Routes/configureRoutes'
+import { ConfigureRoutes } from './routes/configureRoutes'
 import * as winston from 'winston'
 import * as expressWinston from 'express-winston'
 import express, { Request, Response } from 'express'
