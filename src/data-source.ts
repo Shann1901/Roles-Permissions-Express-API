@@ -18,7 +18,7 @@ const log: debug.IDebugger = debug('app: DB-initialization')
             password: environmentConfigs['POSTGRES_PASSWORD'] || '',
             database: environmentConfigs['POSTGRES_DB'] || '',
             synchronize: true,
-            logging: true,
+            logging: environmentConfigs['DEBUG'] === 'true',
             entities: [User, Role, Permission],
             subscribers: [],
             migrations: [],
