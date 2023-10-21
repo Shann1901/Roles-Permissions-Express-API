@@ -1,4 +1,6 @@
-import { User } from './entity/User' 
+import User from './entity/User' 
+import Role from './entity/Role'
+import Permission from './entity/Permission'
 import { DataSource} from "typeorm";
 import { singleton, registry, container} from 'tsyringe';
 import debug from 'debug';
@@ -17,7 +19,7 @@ const log: debug.IDebugger = debug('app: DB-initialization')
             database: environmentConfigs['POSTGRES_DB'] || '',
             synchronize: true,
             logging: true,
-            entities: [User],
+            entities: [User, Role, Permission],
             subscribers: [],
             migrations: [],
         })
@@ -26,7 +28,7 @@ const log: debug.IDebugger = debug('app: DB-initialization')
 
 @singleton()
 export class DbHelper {
-
+    
     static async initializeDB() {
          try {
             const dataSource: DataSource = container.resolve('DatabaseConfig')
