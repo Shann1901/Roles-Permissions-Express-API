@@ -1,3 +1,17 @@
-const User = {}
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm"
 
-export default User
+@Entity()
+export class User {
+
+    @PrimaryGeneratedColumn()
+    id: number
+
+    @Column()
+    firstname: string
+
+    @Column()
+    lastName: string
+
+    @Column()
+    age: number
+}

@@ -14,6 +14,7 @@
         "noUnusedParameters": false,
         "inlineSourceMap": true,
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "useUnknownInCatchVariables": false
     }
 }

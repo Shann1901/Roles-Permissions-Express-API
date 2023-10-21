@@ -2,12 +2,11 @@
 import "reflect-metadata"
 import { container } from 'tsyringe'
 import { ConfigureRoutes } from './routes/configureRoutes'
+import { DbHelper } from "./data-source"
 import * as winston from 'winston'
 import * as expressWinston from 'express-winston'
 import express, { Request, Response } from 'express'
-import dotenv from "dotenv"
-
-dotenv.config()
+import { environmentConfigs } from "./env.config"
 
 const loggerOptions: expressWinston.LoggerOptions = {
     transports: [new winston.transports.Console],
@@ -17,6 +16,8 @@ const loggerOptions: expressWinston.LoggerOptions = {
         winston.format.colorize({ all: true })
     )
 }
+
+DbHelper.initializeDB()
 
 const app = express()
 
@@ -28,7 +29,7 @@ app.use(express.json())
 app.use(expressWinston.logger(loggerOptions))
 
 
-const portNumber = 3000
+const portNumber = environmentConfigs['APPLICATION_PORT']
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Hello World')
