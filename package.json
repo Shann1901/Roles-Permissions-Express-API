@@ -7,7 +7,9 @@
     "start": "tsc && node ./dist/index.js",
     "debug": "SET DEBUG=* && npm run start",
     "dbInit": "docker-compose up -d",
-    "typeorm": "typeorm-ts-node-esm"
+    "list-pending-migrations": "tsc && npx typeorm -d ./dist/dbConfig.js migration:show",
+    "pending-migrations": "tsc && npx typeorm -d ./dist/dbConfig.js migration:run --transaction each",
+    "revert-last-migrations": "tsc && npx typeorm -d ./dist/dbConfig.js migration:revert --transaction each"
   },
   "author": "Shantanu Nigam",
   "license": "ISC",

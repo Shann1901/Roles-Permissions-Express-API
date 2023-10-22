@@ -10,7 +10,5 @@ export interface DbConfigJson extends PostgresConnectionOptions {
     synchronize: boolean,
     logging: boolean,
     entities: Entities
-    subscribers?: [],
-    migrations?: [],
-    migrationsTableName?: string,
+    subscribers?: []
 }

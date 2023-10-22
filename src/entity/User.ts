@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from "typeorm"
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinTable } from "typeorm"
 import Role  from "./Role"
 
 @Entity()
@@ -22,7 +22,10 @@ export default class User {
     @Column()
     password: string
 
-    @ManyToOne(() => Role, (role) => role.users)
+    @ManyToOne(() => Role, (role) => role.users, {
+        cascade: true
+    })
+    @JoinTable()
     role: Role
 
 }

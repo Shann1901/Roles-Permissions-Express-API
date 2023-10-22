@@ -1,7 +1,7 @@
 
 import { DataSource} from "typeorm";
 import { singleton, registry, container} from 'tsyringe';
-import { DbConfig } from "./dbConfig";
+import { dataSourceInstance } from "./dbConfig";
 import debug from 'debug';
 
 
@@ -10,7 +10,7 @@ const log: debug.IDebugger = debug('app: DB-initialization')
 @registry([
     {
         token: 'DatabaseConfig',
-        useValue: DbConfig.getDataSource()
+        useValue: dataSourceInstance
     }
 ])
 @singleton()

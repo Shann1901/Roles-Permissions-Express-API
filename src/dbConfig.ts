@@ -4,11 +4,12 @@ import { DbConfigJson } from "./types/dbTypes";
 import User from './entity/User' 
 import Role from './entity/Role'
 import Permission from './entity/Permission'
+import { SeedUsersInfo1697952752143 } from './migration/1697952752143-SeedUsersInfo'
 import { environmentConfigs } from "./env.config"
 
 
 @singleton()
-export class DbConfig {
+class DbConfig {
     private static configJson: DbConfigJson = {
         type: 'postgres',
         host: environmentConfigs['POSTGRES_HOST'] || '',
@@ -19,7 +20,7 @@ export class DbConfig {
         logging: environmentConfigs['DEBUG'] === 'true',
         entities: [User, Role, Permission],
         subscribers: [],
-        migrations: [],
+        migrations: [SeedUsersInfo1697952752143],
     }
 
     private static dbSourceInstance: DataSource | null = null
@@ -32,3 +33,5 @@ export class DbConfig {
         return DbConfig.dbSourceInstance
     }
 }
+
+export const dataSourceInstance: DataSource = DbConfig.getDataSource()
