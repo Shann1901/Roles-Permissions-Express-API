@@ -2,7 +2,7 @@
 import "reflect-metadata"
 import { container } from 'tsyringe'
 import { ConfigureRoutes } from './routes/configureRoutes'
-import { DbHelper } from "./data-source"
+import { DbHelper } from "./dbHelper"
 import * as winston from 'winston'
 import * as expressWinston from 'express-winston'
 import express, { Request, Response } from 'express'
