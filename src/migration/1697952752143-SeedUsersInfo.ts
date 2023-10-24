@@ -49,10 +49,32 @@ export class SeedUsersInfo1697952752143 implements MigrationInterface {
         const permissionRepository = this.dataSource.getRepository(Permission)
         const roleRepository = this.dataSource.getRepository(Role)
         const userRepository = this.dataSource.getRepository(User)
+        const userPermissionRepository = this.dataSource.getRepository("role_permissions_permission")
 
-        permissionRepository.clear()
-        roleRepository.clear()
-        userRepository.clear()
+        const allUsers = await userRepository.find({
+            relations: {
+                role: {
+                    permissions: true
+                }
+            }
+        })
+
+        for (const user of allUsers) {
+            const role = user.role
+            const permissions = role.permissions
+           
+            for (const permission of permissions) {
+                userPermissionRepository.delete({
+                    roleId: role.id,
+                    permissionId: permission.id
+                })
+                permissionRepository.delete({
+                    id: permission.id
+                })
+            }
+            userRepository.delete({ id: user.id}) 
+            roleRepository.delete({ id: role.id }) 
+        }
     }
 
 }
