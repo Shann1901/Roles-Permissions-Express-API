@@ -3,40 +3,47 @@ import { dataSourceInstance } from "../dbConfig"
 import User  from '../entity/User'
 import Role from "../entity/Role"
 import Permission from "../entity/Permission"
+import { usersData } from "./userData"
+import { RolePermissions } from "../enums/user"
 
 export class SeedUsersInfo1697952752143 implements MigrationInterface {
     transaction = true
     readonly dataSource: DataSource = dataSourceInstance
     public async up(queryRunner: QueryRunner): Promise<void> {
         try {
-            const getUersPermission = new Permission()
-            getUersPermission.permission = 'getAllUsers'
-            getUersPermission.description = 'Returns all the users'
-            
 
-            const editUserPermission = new Permission()
-            editUserPermission.permission = 'editUser'
-            editUserPermission.description = 'Ability to edit a User'
+            for (const userData of usersData) {
+                if (userData.permissions) {
+                    const permissonsToSave = []
+                    for (const permission of userData.permissions) {
+                        const permissionInstance = new Permission()
+                        permissionInstance.permission = permission
+                        permissionInstance.description = RolePermissions.getPermissionDescription(permission)
+                        permissonsToSave.push(permissionInstance)
+                    }
 
-            const role = new Role()
-            role.roleName = 'Admin'
-            role.roleDescription = 'God level: can do anything'
-            
+                    const roleInstance = new Role()
+                    roleInstance.roleName = userData.role
+                    roleInstance.roleDescription = RolePermissions.getRoleDescription(userData.role)
 
-            const userRepository = this.dataSource.getRepository(User)
-            const user = new User()
-            user.firstname = 'Shantanu'
-            user.lastName = 'Nigam'
-            user.email = 'shantanunigam1901@gmail.com'
-            user.password = 'Shann123'
-            user.age = 27
+                    const userRepository = this.dataSource.getRepository(User)
+                    const userInstance = new User()
+                    userInstance.firstname = userData.firstName
+                    userInstance.lastName = userData.lastName
+                    userInstance.email = userData.email
+                    userInstance.password = userData.password
+                    userInstance.age = userData.age
 
-            // Relations connections (one-to-many, many-to-many)
-            user.role = role
-            role.permissions = [getUersPermission, editUserPermission]
+                    // Relations connections (one-to-many, many-to-many)
+                    userInstance.role = roleInstance
+                    roleInstance.permissions = [...permissonsToSave]
     
-            // With cascade: true on the entities, ater saving user, roles and permissions will be auto-saved by TypeORM
-            userRepository.save(user)
+                    // With cascade: true on the entities, ater saving user, roles and permissions will be auto-saved by TypeORM
+                    userRepository.save(userInstance)
+                }
+
+            }
+            
         } catch (error) {
             throw new Error(error)
         }
