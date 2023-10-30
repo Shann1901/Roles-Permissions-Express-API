@@ -8,7 +8,7 @@ export default class User {
     id: number
 
     @Column()
-    firstname: string
+    firstName: string
 
     @Column()
     lastName: string
