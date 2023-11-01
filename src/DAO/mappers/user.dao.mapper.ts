@@ -58,5 +58,20 @@ export const userMapper = {
             ...user,
             role: constructRole()
         }
+    },
+    mapPartialDTOPropsToPartialUserEntityAttrs: (entityPropsToPatch: Partial<UserDTO>): Partial<User> => {
+        // id: number,
+        // firstName: string,
+        // lastName: string,
+        // age: number,
+        // email: string,
+        // password: string,
+        // role: Role,
+        // permissions?: Array<Permission>
+        let role = null
+        let permissions = []
+        if (entityPropsToPatch.role) {
+
+        }
     }
 }
