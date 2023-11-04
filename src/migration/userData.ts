@@ -42,4 +42,14 @@ export const usersData: Array<UserDTO> = [
         role: Role.Admin,
         permissions: RolePermissions.getPermissions(Role.Admin)
     },
+    {
+        id: 5,
+        firstName: "Test",
+        lastName: "User",
+        age: 30,
+        email: "Test.user@gmail.com",
+        password: "#!2t7mlkkji###2",
+        role: Role.Admin,
+        permissions: RolePermissions.getPermissions(Role.Admin)
+    },
 ]
