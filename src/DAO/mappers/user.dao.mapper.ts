@@ -2,6 +2,7 @@ import { UserDTO } from "../../DTO/user.dto";
 import User from "../../entity/User";
 import Role from "../../entity/Role";
 import Permission from "../../entity/Permission";
+import { dataSourceInstance } from "../../dbConfig";
 import { Role as RoleEnum, Permission as PermissionEnum, RolePermissions } from "../../enums/user";
 
 function getRoleEnum(enumValue: string): RoleEnum {
@@ -19,6 +20,25 @@ function getPermissionEnum(enumValue: string): PermissionEnum {
 } 
 
 export const userMapper = {
+    roleRepo: dataSourceInstance.getRepository(Role),
+    constructRole: (user: Partial<UserDTO>): Role => {
+        const roleObj = new Role()
+        roleObj.roleName = user.role ??RoleEnum.GuestUser
+        roleObj.roleDescription = RolePermissions.getRoleDescription(user.role ?? RoleEnum.GuestUser)
+        const permissions = RolePermissions.getPermissions(user.role ?? RoleEnum.GuestUser)
+        for (const permission of permissions) {
+            const permissionObj = new Permission() 
+            permissionObj.permission = permission
+            permissionObj.description = RolePermissions.getPermissionDescription(permission)
+            if (!roleObj.permissions) {
+                roleObj.permissions = []
+            } else {
+                roleObj.permissions.push(permissionObj)
+            }
+        }
+        return roleObj
+        
+    },
     mapToDTO: (user: User): UserDTO => { 
         return {
             ...user,
@@ -33,45 +53,43 @@ export const userMapper = {
             })()
         }
     },
-    mapDTOToUserEntity: (user: UserDTO): User => {
-        const constructRole = (): Role => {
-            const roleObj = new Role()
-            roleObj.roleName = user.role
-            roleObj.roleDescription = RolePermissions.getRoleDescription(user.role)
-            const permissions = RolePermissions.getPermissions(user.role)
-            for (const permission of permissions) {
-                const permissionObj = new Permission() 
-                permissionObj.permission = permission
-                permissionObj.description = RolePermissions.getPermissionDescription(permission)
-                if (!roleObj.permissions) {
-                    roleObj.permissions = []
-                } else {
-                    roleObj.permissions.push(permissionObj)
-                }
+    mapDTOToUserEntity: async (user: UserDTO): Promise<User> => {
+        const existingRole = await userMapper.roleRepo.findOne({
+            where: {
+                roleName: user.role
+            },
+            relations: {
+                permissions: true
             }
-            return roleObj
-            
-        }
-
+        })
         
         return {
             ...user,
-            role: constructRole()
+            role: existingRole ?? userMapper.constructRole(user)
         }
     },
-    mapPartialDTOPropsToPartialUserEntityAttrs: (entityPropsToPatch: Partial<UserDTO>): Partial<User> => {
-        // id: number,
-        // firstName: string,
-        // lastName: string,
-        // age: number,
-        // email: string,
-        // password: string,
-        // role: Role,
-        // permissions?: Array<Permission>
-        let role = null
-        let permissions = []
+    mapPartialDTOPropsToPartialUserEntityAttrs: async (entityPropsToPatch: Partial<UserDTO>): Promise<object> => {
+        type DynamicObject = {
+            [key: string]: any;
+          };
+        const partialDTO: DynamicObject = {}
         if (entityPropsToPatch.role) {
-
+            const existingRole = await userMapper.roleRepo.findOne({
+                where: {
+                    roleName: entityPropsToPatch.role
+                },
+                relations: {
+                    permissions: true
+                }
+            })
+            partialDTO.role = existingRole ?? userMapper.constructRole(entityPropsToPatch)
+            if (partialDTO.role && partialDTO.role.permissions) {
+                partialDTO.permissions = partialDTO.role.permissions  || []
+            } 
+        }
+        return {
+            ...entityPropsToPatch,
+            ...partialDTO
         }
     }
 }

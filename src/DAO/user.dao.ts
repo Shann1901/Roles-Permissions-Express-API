@@ -22,17 +22,17 @@ export class UserDAO implements CRUD<UserDTO> {
     }
 
     async create(entity: UserDTO): Promise<UserDTO> {
-        const mappedAsEntity = userMapper.mapDTOToUserEntity(entity)
+        const mappedAsEntity = await userMapper.mapDTOToUserEntity(entity)
         const userEntity = await this.userRepo.save(mappedAsEntity)
         return userMapper.mapToDTO(userEntity)
 
     }
     async update(entity: UserDTO): Promise<UserDTO> {
-        const mappedAsEntity = userMapper.mapDTOToUserEntity(entity)
+        const mappedAsEntity = await userMapper.mapDTOToUserEntity(entity)
         const userEntity = await this.userRepo.save(mappedAsEntity)
         return userMapper.mapToDTO(userEntity)
     }
-    async delete(id: number): Promise<number> {
+    async delete(id: number): Promise<Object> {
         const userPermissionRepository = dataSourceInstance.getRepository("role_permissions_permission")
         const userEntity = await this.userRepo.findOne({
             where: {
@@ -55,11 +55,18 @@ export class UserDAO implements CRUD<UserDTO> {
                 })
             }
             const removedEntity = await this.userRepo.remove(userEntity)
-            return removedEntity.id
+            return {
+                id: removedEntity.id,
+                message: `User with id: ${id} has been deleted with the corresponding user permissions`
+            }
         }
-        return 0
+        return {
+            id: null,
+            message: `User with id: ${id} not found`
+        }
     }
     async patch(id: number, entityPropsToPatch: Partial<UserDTO>): Promise<UserDTO> {
+        let updatedEntity: any
         const userEntity = await this.userRepo.findOne({
             where: {
                 id: id
@@ -70,15 +77,14 @@ export class UserDAO implements CRUD<UserDTO> {
                 }
             }
         })
-        let updatedEntity = null
         if (userEntity) {
             const updatedUser = {
                 ...userEntity,
-                ...userMapper.mapDTOToUserEntity(entityPropsToPatch)
+                ...userMapper.mapPartialDTOPropsToPartialUserEntityAttrs(entityPropsToPatch)
             }
-            updatedEntity = await this.userRepo.save(userEntity)
+            updatedEntity = await this.userRepo.save(updatedUser)
         }
 
-        return updatedEntity ? userMapper.mapToDTO(updatedEntity)
+        return updatedEntity
     }
 }
