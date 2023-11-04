@@ -50,7 +50,7 @@ export class SeedUsersInfo1697952752143 implements MigrationInterface {
 
                     
                     const userInstance = new User()
-                    userInstance.firstname = userData.firstName
+                    userInstance.firstName = userData.firstName
                     userInstance.lastName = userData.lastName
                     userInstance.email = userData.email
                     userInstance.password = userData.password
